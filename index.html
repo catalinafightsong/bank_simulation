@@ -1,0 +1,284 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SecureBank - Security Basics Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+
+<main>
+  <section id="home" class="section active">
+    <div class="grid grid-3">
+      <div class="card book">
+        <div class="cover"><strong class="book-title">Lesson 1<br>Keep it simple</strong></div>
+        <h3>Simple systems are safer</h3>
+        <p>The more steps and systems you use, the more chances there are for mistakes. Fewer steps are easier to check.</p>
+        <button class="btn ui-btn" onclick="showSection('p9')"><span>Run Simulation</span></button>
+      </div>
+      <div class="card book">
+        <div class="cover"><strong class="book-title">Lesson 2<br>Use facts</strong></div>
+        <h3>Use facts to choose protection</h3>
+        <p>Use costs and likely losses to decide whether a security measure is worth paying for. Do not rely on scare tactics.</p>
+        <button class="btn ui-btn" onclick="showSection('p10')"><span>Run Simulation</span></button>
+      </div>
+      <div class="card book">
+        <div class="cover"><strong class="book-title">Lesson 3<br>Work together</strong></div>
+        <h3>People, rules, and tools work together</h3>
+        <p>A security tool cannot fix everything by itself. Staff and clear rules matter too.</p>
+        <button class="btn ui-btn" onclick="showSection('p11')"><span>Run Simulation</span></button>
+      </div>
+      <div class="card book">
+        <div class="cover"><strong class="book-title">Lesson 4<br>Report problems</strong></div>
+        <h3>Report security problems safely</h3>
+        <p>Sharing a flaw with the right people gives them time to fix it before criminals can use it.</p>
+        <button class="btn ui-btn" onclick="showSection('p12')"><span>Run Simulation</span></button>
+      </div>
+      <div class="card book">
+        <div class="cover"><strong class="book-title">Safety check<br>Two people</strong></div>
+        <h3>Important actions need two people</h3>
+        <p>Two separate people check high-value actions so one person cannot make a risky change alone.</p>
+        <button class="btn btn-green ui-btn" onclick="showSection('dual')"><span>Run Simulation</span></button>
+      </div>
+      <div class="card book">
+        <div class="cover"><strong class="book-title">Safety check<br>Split the work</strong></div>
+        <h3>Split sensitive work between roles</h3>
+        <p>One person requests, another approves, and a third carries out the change.</p>
+        <button class="btn btn-green ui-btn" onclick="showSection('sod')"><span>Run Simulation</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="p9" class="section">
+    <button class="back-button ui-btn" onclick="showSection('home')"><span>&larr; Back to overview</span></button>
+    <h1>Keep payment steps simple</h1>
+    <p class="subtitle">Compare a payment with many steps to one with fewer steps. Every extra step is another place where something can go wrong.</p>
+    <div class="compare">
+      <div class="complex-box">
+        <h3 class="risk-heading">Many steps (more risk)</h3>
+        <p class="small-muted">Many handoffs, manual steps, and systems</p>
+        <div id="complexNodes">
+          <span class="node risk">Core Banking</span>
+          <span class="node risk">Middleware A</span>
+          <span class="node risk">Legacy Adapter</span>
+          <span class="node risk">Manual Review Queue</span>
+          <span class="node risk">SWIFT Gateway</span>
+          <span class="node risk">Correspondent Bank</span>
+          <span class="node risk">Settlement Engine</span>
+          <span class="node risk">Reconciliation Bot</span>
+          <span class="node risk">Exception Desk</span>
+        </div>
+        <div class="meter"><div class="meter-fill danger-fill" id="complexMeter"></div></div>
+        <div class="small-muted">How easy it is to check: <strong id="complexScore">18%</strong></div>
+      </div>
+      <div class="simple-box">
+        <h3 class="safe-heading">Fewer steps (less risk)</h3>
+        <p class="small-muted">Fewer parts and clear ownership</p>
+        <div id="simpleNodes">
+          <span class="node safe">Core Banking</span>
+          <span class="node safe">Payment Hub</span>
+          <span class="node safe">SWIFT Gateway</span>
+          <span class="node safe">Settlement</span>
+        </div>
+        <div class="meter"><div class="meter-fill safe-fill" id="simpleMeter"></div></div>
+        <div class="small-muted">How easy it is to check: <strong id="simpleScore">82%</strong></div>
+      </div>
+    </div>
+    <div class="button-row">
+      <button class="btn ui-btn" onclick="runComplexitySim()"><span>Compare the risks</span></button>
+      <button class="btn btn-outline ui-btn" onclick="resetComplexity()"><span>Reset</span></button>
+    </div>
+    <div class="log" id="complexLog"></div>
+  </section>
+
+  <section id="p10" class="section">
+    <button class="back-button ui-btn" onclick="showSection('home')"><span>&larr; Back to overview</span></button>
+    <h1>Use numbers to choose protection</h1>
+    <p class="subtitle">See whether a security measure is worth its price compared with the money it protects.</p>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Is the protection worth it?</h3>
+        <label class="label">Money that could be lost (USD)</label>
+        <input class="input" type="number" id="assetValue" value="80000">
+        <label class="label">Price of the protection (USD)</label>
+        <input class="input" type="number" id="controlCost" value="200000">
+        <label class="label">Expected reduction in risk (%)</label>
+        <input class="input" type="number" id="riskReduction" value="70" min="0" max="100">
+        <button class="btn ui-btn" onclick="calcBusinessCase()"><span>Check the numbers</span></button>
+        <div class="sim-result" id="bizResult"></div>
+      </div>
+      <div class="card">
+        <h3>Example reference</h3>
+        <p>Example cost of a serious financial-services data breach:</p>
+        <div class="big-number reference-number">$6.29M</div>
+        <p class="small-muted reference-note">Use real estimates when making a business case. Fear alone is not a good reason to spend money.</p>
+        <div class="reference-details">
+          <div class="label">Value indicator</div>
+          <div class="meter"><div class="meter-fill" id="roiMeter"></div></div>
+          <div id="roiLabel" class="small-muted">Waiting for your numbers...</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="p11" class="section">
+    <button class="back-button ui-btn" onclick="showSection('home')"><span>&larr; Back to overview</span></button>
+    <h1>People, rules, and tools</h1>
+    <p class="subtitle">Turn on each part to see why all three are needed for security to work.</p>
+    <div class="triad">
+      <div class="triad-item" id="layerPeople" onclick="toggleLayer('people')">
+        <div class="icon">People</div>
+        <strong>People</strong>
+        <div class="layer-description">Trained staff</div>
+      </div>
+      <div class="triad-item" id="layerProcess" onclick="toggleLayer('process')">
+        <div class="icon">Rules</div>
+        <strong>Process</strong>
+        <div class="layer-description">Clear checking rules</div>
+      </div>
+      <div class="triad-item" id="layerTech" onclick="toggleLayer('tech')">
+        <div class="icon">Tools</div>
+        <strong>Technology</strong>
+        <div class="layer-description">A safe payment system</div>
+      </div>
+    </div>
+    <div class="card centered-card">
+      <div class="big-number" id="controlStrength">0%</div>
+      <div class="small-muted control-label">How strong is the protection?</div>
+      <div class="meter strength-meter"><div class="meter-fill safe-fill" id="strengthMeter"></div></div>
+      <p id="strengthMsg" class="small-muted">Turn on all three parts to protect the payment.</p>
+      <button class="btn ui-btn" onclick="testPaymentRelease()"><span>Try to release payment</span></button>
+      <div class="sim-result" id="p11Result"></div>
+    </div>
+  </section>
+
+  <section id="p12" class="section">
+    <button class="back-button ui-btn" onclick="showSection('home')"><span>&larr; Back to overview</span></button>
+    <h1>Report security problems safely</h1>
+    <p class="subtitle">Compare reporting a flaw quickly with keeping it secret.</p>
+    <div class="tabs">
+      <button class="tab ui-btn active" onclick="setDisclosureMode('open')"><span>Report it safely</span></button>
+      <button class="tab ui-btn" onclick="setDisclosureMode('secret')"><span>Keep it secret</span></button>
+    </div>
+    <div class="timeline" id="disclosureTimeline"></div>
+    <br/>
+    <button class="btn ui-btn" onclick="runDisclosure()"><span>Show what happens</span></button>
+    <br/>
+    <button class="btn btn-outline ui-btn" onclick="resetDisclosure()"><span>Reset</span></button>
+  </section>
+
+  <section id="dual" class="section">
+    <button class="back-button ui-btn" onclick="showSection('home')"><span>&larr; Back to overview</span></button>
+    <h1>Two people check one payment</h1>
+    <p class="subtitle">A high-value payment needs two different people: one enters it and another checks it.</p>
+    <div class="status-bar">
+      <div class="status-pill" id="dualStatus">Status: Waiting for payment</div>
+      <div class="status-pill">Example limit: $5,000,000</div>
+    </div>
+    <div class="flow" id="dualFlow">
+      <div class="flow-step" id="stepEnter">1. Enter payment</div>
+      <span class="arrow">-&gt;</span>
+      <div class="flow-step" id="stepMaker">2. Submit for checking</div>
+      <span class="arrow">-&gt;</span>
+      <div class="flow-step" id="stepChecker">3. Second person checks</div>
+      <span class="arrow">-&gt;</span>
+      <div class="flow-step" id="stepRelease">4. Release</div>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>Person 1 - Enter payment</h3>
+        <div class="role-card">
+          <div class="avatar a">A</div>
+          <div>
+            <div>Omar Jaber</div>
+            <div class="badge">Payment officer</div>
+          </div>
+        </div>
+        <label class="label">Beneficiary</label>
+        <input class="input" id="payBen" value="Horizon Trading LLC">
+        <label class="label">Amount (USD)</label>
+        <input class="input" type="number" id="payAmt" value="2500000">
+        <label class="label">Reference</label>
+        <input class="input" id="payRef" value="INV-2026-8841">
+        <button class="btn ui-btn" id="btnMaker" onclick="makerAction()"><span>Send for checking</span></button>
+      </div>
+      <div class="card">
+        <h3>Person 2 - Check payment</h3>
+        <div class="role-card">
+          <div class="avatar b">B</div>
+          <div>
+            <div>Omar Jaber</div>
+            <div class="badge">Senior approver</div>
+          </div>
+        </div>
+        <p class="checker-message" id="checkerView">Waiting for the first person...</p>
+        <button class="btn btn-green ui-btn" id="btnChecker" onclick="checkerAction()" disabled><span>Approve and release</span></button>
+        <button class="btn btn-outline ui-btn reject-button" id="btnReject" onclick="rejectPayment()" disabled><span>Reject</span></button>
+      </div>
+    </div>
+    <div class="log" id="dualLog"></div>
+    <div class="button-row">
+      <button class="btn btn-outline ui-btn" onclick="resetDual()"><span>Reset Simulation</span></button>
+      <button class="btn btn-amber ui-btn" onclick="trySinglePerson()"><span>Try one-person release (should fail)</span></button>
+    </div>
+  </section>
+
+  <section id="sod" class="section">
+    <button class="back-button ui-btn" onclick="showSection('home')"><span>&larr; Back to overview</span></button>
+    <h1>Split sensitive work between roles</h1>
+    <p class="subtitle">One person requests a change, another approves it, and a third carries it out.</p>
+    <div class="grid grid-3">
+      <div class="card">
+        <h3>Role: Requester</h3>
+        <div class="role-card">
+          <div class="avatar a">R</div>
+          <div><div>Omar Jaber</div><div class="badge">Operations</div></div>
+        </div>
+        <p class="small-muted">Can ask for a change, but cannot approve or deploy it.</p>
+        <button class="btn ui-btn" id="btnReq" onclick="sodRequest()"><span>Make request</span></button>
+      </div>
+      <div class="card">
+        <h3>Role: Approver</h3>
+        <div class="role-card">
+          <div class="avatar b">A</div>
+          <div><div>Omar Jaber</div><div class="badge">Risk / Compliance</div></div>
+        </div>
+        <p class="small-muted">Can approve or reject, but cannot deploy it.</p>
+        <button class="btn btn-green ui-btn" id="btnApp" onclick="sodApprove()" disabled><span>Approve request</span></button>
+      </div>
+      <div class="card">
+        <h3>Role: Executor</h3>
+        <div class="role-card">
+          <div class="avatar c">E</div>
+          <div><div>Omar Jaber</div><div class="badge">Platform Ops</div></div>
+        </div>
+        <p class="small-muted">Can deploy only after approval, but cannot approve it.</p>
+        <button class="btn ui-btn" id="btnExec" onclick="sodExecute()" disabled><span>Deploy change</span></button>
+      </div>
+    </div>
+    <div class="flow flow-spaced">
+      <div class="flow-step" id="sod1">Request</div>
+      <span class="arrow">-&gt;</span>
+      <div class="flow-step" id="sod2">Approval</div>
+      <span class="arrow">-&gt;</span>
+      <div class="flow-step" id="sod3">Execution</div>
+    </div>
+    <div class="log" id="sodLog"></div>
+    <div class="button-row">
+      <button class="btn btn-outline ui-btn" onclick="resetSod()"><span>Reset</span></button>
+      <br/>
+      <button class="btn btn-amber ui-btn" onclick="sodConflict()"><span>Try one person doing everything</span></button>
+    </div>
+  </section>
+
+</main>
+
+<script src="script.js" defer></script>
+</body>
+</html>
